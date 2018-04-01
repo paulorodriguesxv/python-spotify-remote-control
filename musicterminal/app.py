@@ -5,7 +5,23 @@ from curses.textpad import Textbox
 from curses.textpad import rectangle
 
 from client import Menu
+from client import ErrorPanel
 from client import DataManager
+
+
+def show_error_screen(stdscr, error_text):
+
+    albums_panel = ErrorPanel('ERROR', error_text, (20, 40, 0, 0))
+
+    albums_panel.update()
+    albums_panel.show()
+
+    curses.doupdate()
+    curses.panel.update_panels()
+
+    key = stdscr.getch()
+
+    albums_panel.hide()
 
 
 def show_search_screen(stdscr):
@@ -23,6 +39,18 @@ def show_search_screen(stdscr):
     return criteria
 
 
+def get_artist(stdscr, data_manager):
+    artist = None
+    while not artist:
+        criteria = show_search_screen(stdscr)
+        try:
+            artist = data_manager.search_artist(criteria)
+        except Exception as e:
+            show_error_screen(stdscr, str(e))
+
+    return artist
+
+
 def clear_screen(stdscr):
     stdscr.clear()
     stdscr.refresh()
@@ -36,8 +64,6 @@ def main(stdscr):
 
     _data_manager = DataManager()
 
-    criteria = show_search_screen(stdscr)
-
     height, width = stdscr.getmaxyx()
 
     albums_panel = Menu('List of albums for the selected artist',
@@ -46,7 +72,7 @@ def main(stdscr):
     tracks_panel = Menu('List of tracks for the selected album',
                         (height, width, 0, 0))
 
-    artist = _data_manager.search_artist(criteria)
+    artist = get_artist(stdscr, _data_manager)
 
     albums = _data_manager.get_artist_albums(artist['id'])
 
@@ -71,7 +97,7 @@ def main(stdscr):
 
         if action is not None:
             action_result = action()
-            
+
             if current_panel == albums_panel and action_result is not None:
                 _id, uri = action_result
                 tracks = _data_manager.get_album_tracklist(_id)
@@ -86,8 +112,7 @@ def main(stdscr):
 
         if key == curses.KEY_F2:
             current_panel.hide()
-            criteria = show_search_screen(stdscr)
-            artist = _data_manager.search_artist(criteria)
+            artist = get_artist(stdscr, _data_manager)
             albums = _data_manager.get_artist_albums(artist['id'])
 
             clear_screen(stdscr)
@@ -100,7 +125,6 @@ def main(stdscr):
             is_running = False
 
         current_panel.update()
-
 
 try:
     wrapper(main)

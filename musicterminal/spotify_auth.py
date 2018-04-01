@@ -77,7 +77,7 @@ def callback():
     file.write(response.refresh_token)
     file.close()
 
-    return 'All set! You can close the browser window and stop the server.'
+    return render_template('callback.html')
 
 if __name__ == '__main__':
     app.run(host='localhost', port=3000)

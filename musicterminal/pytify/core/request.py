@@ -32,3 +32,10 @@ def execute_request(
             return response.text
 
     result = json.loads(response.text)
+
+    if not response.ok:
+            error = result['error']
+            raise BadRequestError(
+                f'{error["message"]} (HTTP {error["status"]})')
+
+    return result

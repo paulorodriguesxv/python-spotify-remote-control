@@ -18,9 +18,14 @@ pip install -r requirements.txt
 In order to make Spotify Terminal client work properly,  you should grant special rights to it, so first launch spotify_auth and autorize the 
 app
 
+### Create a Spotify APP:
+    - https://beta.developer.spotify.com/dashboard/applications
+    - Edit settings and put http://localhost:3000/callback in Redirect URIs field
+
+### Authorize app 
 python spotify_auth.py and access http://localhost:3000
 
-after that, launch remote control
+### launch remote control
 
 python app.py
 

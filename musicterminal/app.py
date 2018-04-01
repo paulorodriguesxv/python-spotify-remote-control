@@ -40,6 +40,7 @@ def show_search_screen(stdscr):
 
 
 def get_artist(stdscr, data_manager):
+    # TODO: add infinite loop control here
     artist = None
     while not artist:
         criteria = show_search_screen(stdscr)

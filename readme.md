@@ -24,6 +24,8 @@ after that, launch remote control
 
 python app.py
 
+*Tips: maybe you might have a Premium account to work properly. Spotify need was running in some device and playing something..
+
 ## Commands
  - Search: F2
  - Exit: ctrl + c or "q"
